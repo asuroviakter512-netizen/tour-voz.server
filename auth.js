@@ -14,7 +14,7 @@ export default function authRoutes(client) {
     try {
       const { name, email, password } = req.body;
 
-      if (!name || !email || !password) {
+      if (!name?.trim() || !email?.trim() || !password) {
         return res.status(400).json({
           message: "Name, email and password are required",
         });
@@ -66,7 +66,7 @@ export default function authRoutes(client) {
     try {
       const { email, password } = req.body;
 
-      if (!email || !password) {
+      if (!email?.trim() || !password) {
         return res.status(400).json({
           message: "Email and password are required",
         });
@@ -103,7 +103,6 @@ export default function authRoutes(client) {
         });
       }
 
-      // Normalize role from MongoDB
       const userRole = String(user.role || "user")
         .trim()
         .toLowerCase();
@@ -118,11 +117,11 @@ export default function authRoutes(client) {
         { expiresIn: "1d" }
       );
 
-      return res.json({
+      return res.status(200).json({
         message: "Login successful",
         token,
         user: {
-          id: user._id,
+          id: user._id.toString(),
           name: user.name,
           email: user.email,
           role: userRole,
